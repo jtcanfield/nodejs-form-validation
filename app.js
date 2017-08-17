@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-// const index = require('./routes/index');
 const bodyParser = require('body-parser');
 const mustache = require('mustache-express');
 const fs = require('fs-extra');
