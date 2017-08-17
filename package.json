@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/jtcanfield/nodejs-form-validation#readme",
   "dependencies": {
-    "express": "^4.15.4"
+    "body-parser": "^1.17.2",
+    "busboy": "^0.2.14",
+    "express": "^4.15.4",
+    "fs-extra": "^4.0.1",
+    "mustache-express": "^1.2.5"
   }
 }
