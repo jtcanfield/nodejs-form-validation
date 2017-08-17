@@ -1,29 +1,35 @@
 var express = require('express');
+var path = require('path');
+var index = require('./routes/index');
 var bodyParser = require('body-parser');
-
-// Create app
+var mustache = require('mustache-express');
+var fs = require('fs-extra');
+var Busboy = require('busboy');
 var app = express();
-
-// Set app to use bodyParser()` middleware.
-app.use(bodyParser.json());
+app.engine('mustache', mustache());
+app.set('view engine', 'mustache');
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function(req, res){
-  // Set 'action' to '/'
-  var html = '<form action="/" method="post">' +
-             '<h1>User Name</h1>' +
-             '<p>Enter your email</p>' +
-             '<input type="text" name="email" placeholder="email address" />' +
-             '<button type="submit">Submit</button>' +
-         '</form>';
-  res.send(html);
+app.use('/', function(req, res){
+  res.render("index");
 });
 
-// Receives data from form (action='/')
-// 'req.body' now contains form data.
-app.post('/', function(req, res){
-  var email = req.body.email;
-  var html = '<p>Your user name is: </p>' + email;
-  res.send(html);
+// Accept POST request on '/upload'.
+app.post('/upload', function (req, res) {
+  var busboy = new Busboy({ headers: req.headers });
+  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    var saveTo = path.join('./public/uploads/', path.basename(filename));
+    file.pipe(fs.createWriteStream(saveTo));
+  });
+  busboy.on('finish', function() {
+    res.writeHead(200, { 'Connection': 'close' });
+    res.end("Uploaded file to: /uploads");
+  });
+  //Parse HTTP-POST upload
+  return req.pipe(busboy);
 });
-app.listen(3000);
+
+app.listen(3000, function () {
+  console.log('Successfully started node application!')
+})
