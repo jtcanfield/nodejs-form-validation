@@ -1,13 +1,14 @@
-var express = require('express');
-var path = require('path');
-var index = require('./routes/index');
-var bodyParser = require('body-parser');
-var mustache = require('mustache-express');
-var fs = require('fs-extra');
-var Busboy = require('busboy');
-var app = express();
+const express = require('express');
+const path = require('path');
+// const index = require('./routes/index');
+const bodyParser = require('body-parser');
+const mustache = require('mustache-express');
+const fs = require('fs-extra');
+const Busboy = require('busboy');
+const app = express();
 app.engine('mustache', mustache());
 app.set('view engine', 'mustache');
+app.set('views', './views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
